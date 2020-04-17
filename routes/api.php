@@ -18,4 +18,8 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-// Route::post('access_level', 'Tenant\UserController@accessLevel');
+Route::resource('user', 'UserController');
+Route::resource('company', 'CompanyController');
+Route::resource('customer', 'CustomerController');
+
+Route::post('access_level', 'UserController@accessLevel');
