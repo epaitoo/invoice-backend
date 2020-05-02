@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Response;
 use App\User;
-
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+use Laravel\Passport\HasApiTokens;
 
 class UserController extends Controller
 {
+    use Notifiable, HasApiTokens;
      /**
      * Display a listing of the resource.
      *
@@ -48,7 +51,48 @@ class UserController extends Controller
         // $user->sendApiEmailVerificationNotification();
 
         $message = 'Registration successful. Please verify account through the sent email.';
-        return  response(compact('message', 'user'), 200);
+        return  response(compact('message'), 201);
+    }
+
+    public function login(Request $request)
+    {
+        //find oauth table where id = 2
+        $passport = DB::table('oauth_clients')->where('id', 2)->first();
+
+        //start a new guzzle client instance
+        $http = new \GuzzleHttp\Client;
+
+        //try to create access token
+        try {
+            $response = $http->post('http://localhost:8001/oauth/token', [
+                'form_params' => [
+                    'grant_type' => 'password',
+                    'client_id' => $passport->id,
+                    'client_secret' => $passport->secret,
+                    'username' => $request->username,
+                    'password' => $request->password,
+                ]
+            ]);
+
+            //if token is successful grab the token body
+            $token = $response->getBody();
+
+            //decode the token
+            $data = json_decode($token, true);
+
+            return response()->json(['access_token' => $data['access_token'],]);
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+                if ($e->getCode() === 400) {
+
+                    return response()->json('Invalid Request. Please enter a username or a password.', $e->getCode());
+
+                } else if ($e->getCode() === 401) {
+
+                    return response()->json('Your credentials are incorrect. Please try again', $e->getCode());
+                }
+            return response()->json('Oops...Something went wrong.', $e->getCode());
+        }
+
     }
 
 

@@ -18,8 +18,9 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::resource('user', 'UserController');
+Route::resource('users', 'UserController');
 Route::resource('company', 'CompanyController');
 Route::resource('customer', 'CustomerController');
 
+Route::post('login', 'UserController@login');
 Route::post('access_level', 'UserController@accessLevel');
