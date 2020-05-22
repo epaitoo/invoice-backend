@@ -42,7 +42,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails())  {
-            return response()->json(['error'=>$validator->errors()],
+            return response()->json(['errors'=>$validator->errors()],
                 Response::HTTP_UNAUTHORIZED);
         }
 
