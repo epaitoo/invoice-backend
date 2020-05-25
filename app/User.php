@@ -5,9 +5,10 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\VerifyApiEmail;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, Notifiable;
 
@@ -52,10 +53,10 @@ class User extends Authenticatable
         return \Carbon\Carbon::parse($value)->diffForHumans();
     }
 
-    // // Send Email Verification 
-    // public function sendApiEmailVerificationNotification()
-    // {
-    //     $this->notify(new VerifyApiEmail); // my notification
-    // }
+    // Send Email Verification
+    public function sendApiEmailVerificationNotification()
+    {
+        $this->notify(new VerifyApiEmail); // my notification
+    }
 
 }

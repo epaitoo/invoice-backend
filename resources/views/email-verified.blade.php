@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Nubia EMR</title>
+        <title>E-Invoice</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -51,7 +51,7 @@
             <div class="content">
                 <div class="jumbotron jumbotron-fluid">
                     <div class="container">
-                      <h1 class="display-1">Nubia EMR</h1>
+                      <h1 class="display-1">E-Invoice</h1>
                       <h1 class="display-4">Your Email has been successfully Verified</h1>
                       <h3 class="lead">Click <a href="http://nubiaemr.com/sign-in">here</a> to return to your homepage</h3>
                     </div>

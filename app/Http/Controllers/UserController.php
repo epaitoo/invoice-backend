@@ -52,8 +52,9 @@ class UserController extends Controller
             'phone' => $request->phone,
             'password' => bcrypt($request->password),
         ]);
-
-        // $user->sendApiEmailVerificationNotification();
+        
+        // Send Email Verification email
+        $user->sendApiEmailVerificationNotification();
 
         $message = 'Registration successful. Please verify account through the sent email.';
         return  response(compact('message', 'user'), 201);
