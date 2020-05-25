@@ -18,9 +18,16 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+Route::post('login', 'UserController@login');
+Route::post('access_level', 'UserController@accessLevel');
+
+// Password reset
+Route::post('password/email', 'Api\ForgotPasswordController@sendResetLinkEmail');
+Route::post('password/reset', 'Api\ResetPasswordController@reset');
+
+
 Route::resource('users', 'UserController');
 Route::resource('company', 'CompanyController');
 Route::resource('customer', 'CustomerController');
 
-Route::post('login', 'UserController@login');
-Route::post('access_level', 'UserController@accessLevel');
+

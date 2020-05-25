@@ -39,9 +39,9 @@ class User extends Authenticatable
     ];
 
     // Setters mutator for password
-    public function setPasswordAttribute($value) {
-        $this->attributes['password'] = bcrypt($value);
-    }
+    // public function setPasswordAttribute($value) {
+    //     $this->attributes['password'] = bcrypt($value);
+    // }
 
     // Getters mutator for human readable time
     public function getCreatedAtAttribute($value) {

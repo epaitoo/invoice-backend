@@ -46,18 +46,24 @@ class UserController extends Controller
                 Response::HTTP_UNAUTHORIZED);
         }
 
-        $user = User::create($request->all());
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => bcrypt($request->password),
+        ]);
 
         // $user->sendApiEmailVerificationNotification();
 
         $message = 'Registration successful. Please verify account through the sent email.';
-        return  response(compact('message'), 201);
+        return  response(compact('message', 'user'), 201);
     }
 
     public function login(Request $request)
     {
         //find oauth table where id = 2
         $passport = DB::table('oauth_clients')->where('id', 2)->first();
+
 
         //start a new guzzle client instance
         $http = new \GuzzleHttp\Client;
