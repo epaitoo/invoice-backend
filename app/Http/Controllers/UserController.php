@@ -84,10 +84,17 @@ class UserController extends Controller
             //if token is successful grab the token body
             $token = $response->getBody();
 
+            // Getting user
+            $user = User::where('email', $request->username)->get();
+
             //decode the token
             $data = json_decode($token, true);
 
-            return response()->json(['access_token' => $data['access_token'],]);
+            return response()->json([
+                'access_token' => $data['access_token'],
+                'user' => $user
+            ]);
+            
         } catch (\GuzzleHttp\Exception\BadResponseException $e) {
                 if ($e->getCode() === 400) {
 

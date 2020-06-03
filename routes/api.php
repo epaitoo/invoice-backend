@@ -26,12 +26,19 @@ Route::post('password/email', 'Api\ForgotPasswordController@sendResetLinkEmail')
 Route::post('password/reset', 'Api\ResetPasswordController@reset');
 
 // Email Verification
-Route::get('email/verify/{id}', 'Api\VerificationApiController@verify')->name('verificationapi.verify');
-Route::get('email/resend', 'Api\VerificationApiController@resend')->name('verificationapi.resend');
+Route::get('email/verify/{id}', 'Api\VerificationApiController@verify')->name('verification.verify');
+Route::get('email/resend', 'Api\VerificationApiController@resend')->name('verification.resend');
 
 
-Route::resource('users', 'UserController');
-Route::resource('company', 'CompanyController');
-Route::resource('customer', 'CustomerController');
+
+
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::resource('users', 'UserController');
+    Route::resource('company', 'CompanyController');
+    Route::resource('customer', 'CustomerController');    
+});
+
+
+
 
 
