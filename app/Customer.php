@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     protected $fillable = [
-        'customer_name', 'customer_email', 'customer_phone_number', 'customer_address'
+        'userId','customer_name', 'customer_email', 'customer_phone_number', 'customer_address'
     ];
 
     // Getters mutator for human readable time

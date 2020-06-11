@@ -32,11 +32,11 @@ Route::get('email/resend', 'Api\VerificationApiController@resend')->name('verifi
 
 
 
-Route::group(['middleware' => 'auth:api'], function () {
+// Route::group(['middleware' => 'auth:api'], function () {
     Route::resource('users', 'UserController');
     Route::resource('company', 'CompanyController');
-    Route::resource('customer', 'CustomerController');    
-});
+    Route::resource('customers', 'CustomerController');    
+// });
 
 
 
