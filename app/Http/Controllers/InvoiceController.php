@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Keygen;
 use App\Invoice;
 use App\InvoiceItem;
 
@@ -187,6 +188,26 @@ class InvoiceController extends Controller
 
         $message = 'Invoice deleted Successfully';
         return response(compact('message'), 200);
+    }
+
+    // number generator
+    protected function generateNumericKey()
+    {
+        return Keygen::numeric(4)->prefix('INV-')->generate();
+    }
+
+    // Auto generate Invoice number
+    protected function generateInvoiceNumber()
+    {
+        $invoiceNumber = $this->generateNumericKey();
+
+        // Ensure an invoice number does not exist
+        // Generate new one if invoice number already exists
+        while (Invoice::where(['invoice_number' => $invoiceNumber])->count() > 0 ) {
+            $invoiceNumber = $this->generateNumericKey();
+        }
+
+        return response(compact('invoiceNumber'), 200);
     }
 
 }

@@ -37,6 +37,9 @@ Route::get('email/resend', 'Api\VerificationApiController@resend')->name('verifi
     Route::resource('company', 'CompanyController');
     Route::resource('customers', 'CustomerController');  
     Route::resource('invoices', 'InvoiceController');  
+
+    Route::get('generate_invoice_num', 'InvoiceController@generateInvoiceNumber');
+
 // });
 
 
