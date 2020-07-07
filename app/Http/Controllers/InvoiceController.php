@@ -41,52 +41,34 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $this->validate($request, [
-            'invoice_number' => 'required',
-            'customer_name' => 'required|max:255',
-            'customer_phone_number' => 'required|max:255',
-            'customer_address' => 'required',
-            'date' => 'required',
-            'discount' => 'required|numeric|min:0',
-            'items' => 'required|array|min:1',
-            'items.*.description' => 'required',
-            'items.*.qty' => 'required|integer|min:1',
-            'items.*.total' => 'required',
-        ]);
-        
-        // create a new invoice item
-        $items = collect($request->items)->transform(function($item){
-            $item['total'] = $item['qty'] * $item['unit_price'];
-            return new InvoiceItem($item);
-        });
+        $invoice = Invoice::create($request->all());
 
-        if($items->isEmpty()) {
+        // Getting all the invoice items from the system
+        $items = $request->input('invoice_items');
+
+        // create invoice items 
+        foreach ($items as $item)
+        {
+            InvoiceItem::create([
+                'invoice_id' => $item['id'],
+                'quantity' => $item['quantity'],
+                'description' => $item['description'],
+                'unit_price' => $item['unit_price'],
+                'total' => $item['total'],
+            ]);
+        }
+
+        if($items->isEmpty()) 
+        {
             return response()
             ->json([
-                'items_empty' => ['One or more Product item is required.']
+                'items_empty' => 'One or more Product item is required.'
             ], 422);
         }
 
-        // Get all the input value except the items array
-        $data = $request->except('items');
-        // Subtotal of the invoice is the sum of the total items (invoice items array)
-        $data['sub_total'] = $items->sum('total');
-        // Get the grand total of the invoice by deducting the subtotal from the discount
-        $data['grand_total'] = $data['sub_total'] - $data['discount'];
+        $message = "Invoice successfully created";
 
-        $invoice = Invoice::create($data);
-
-
-        $invoice->items()->saveMany($products);
-
-        return response()
-            ->json([
-                'created' => true,
-                'id' => $invoice->id,
-                'message' => 'Invoice created successfully'
-            ], 200);
-
+        return response(compact('message'), 200);
     }
 
     /**
@@ -97,7 +79,7 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
-        $invoice = Invoice::with('items')->findOrFail($id);
+        $invoice = Invoice::findOrFail($id);
         return response(compact('invoice'), 200);
     }
 
@@ -121,52 +103,52 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'invoice_number' => 'required',
-            'customer_name' => 'required|max:255',
-            'customer_phone_number' => 'required|max:255',
-            'customer_address' => 'required',
-            'date' => 'required',
-            'discount' => 'required|numeric|min:0',
-            'items' => 'required|array|min:1',
-            'items.*.description' => 'required',
-            'items.*.qty' => 'required|integer|min:1',
-            'items.*.total' => 'required',
-        ]);
+        // $this->validate($request, [
+        //     'invoice_number' => 'required',
+        //     'customer_name' => 'required|max:255',
+        //     'customer_phone_number' => 'required|max:255',
+        //     'customer_address' => 'required',
+        //     'date' => 'required',
+        //     'discount' => 'required|numeric|min:0',
+        //     'items' => 'required|array|min:1',
+        //     'items.*.description' => 'required',
+        //     'items.*.qty' => 'required|integer|min:1',
+        //     'items.*.total' => 'required',
+        // ]);
 
-        $invoice = Invoice::findOrFail($id);
+        // $invoice = Invoice::findOrFail($id);
 
-         // create a new invoice item
-         $items = collect($request->items)->transform(function($item){
-            $item['total'] = $item['qty'] * $item['unit_price'];
-            return new InvoiceItem($item);
-        });
+        //  // create a new invoice item
+        //  $items = collect($request->items)->transform(function($item){
+        //     $item['total'] = $item['qty'] * $item['unit_price'];
+        //     return new InvoiceItem($item);
+        // });
 
-        if($items->isEmpty()) {
-            return response()
-            ->json([
-                'items_empty' => ['One or more Product item is required.']
-            ], 422);
-        }
+        // if($items->isEmpty()) {
+        //     return response()
+        //     ->json([
+        //         'items_empty' => ['One or more Product item is required.']
+        //     ], 422);
+        // }
 
-        // Get all the input value except the items array
-        $data = $request->except('items');
-        // Subtotal of the invoice is the sum of the total items (invoice items array)
-        $data['sub_total'] = $items->sum('total');
-        // Get the grand total of the invoice by deducting the subtotal from the discount
-        $data['grand_total'] = $data['sub_total'] - $data['discount'];
+        // // Get all the input value except the items array
+        // $data = $request->except('items');
+        // // Subtotal of the invoice is the sum of the total items (invoice items array)
+        // $data['sub_total'] = $items->sum('total');
+        // // Get the grand total of the invoice by deducting the subtotal from the discount
+        // $data['grand_total'] = $data['sub_total'] - $data['discount'];
 
-        $invoice = Invoice::update($data);
+        // $invoice = Invoice::update($data);
 
 
-        $invoice->items()->saveMany($products);
+        // $invoice->items()->saveMany($products);
 
-        return response()
-            ->json([
-                'updated' => true,
-                'id' => $invoice->id,
-                'message' => 'Invoice updated successfully'
-            ], 200);
+        // return response()
+        //     ->json([
+        //         'updated' => true,
+        //         'id' => $invoice->id,
+        //         'message' => 'Invoice updated successfully'
+        //     ], 200);
 
 
     }
@@ -182,7 +164,7 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
-        InvoiceItem::where('invoice_id', $invoice->id)->delete();
+        // InvoiceItem::where('invoice_id', $invoice->id)->delete();
 
         $invoice->delete();
 

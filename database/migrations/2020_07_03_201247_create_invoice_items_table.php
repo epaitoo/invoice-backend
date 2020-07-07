@@ -15,11 +15,11 @@ class CreateInvoiceItemsTable extends Migration
     {
         Schema::create('invoice_items', function (Blueprint $table) {
             $table->id();
-            $table->integer('invoice_id')->unsigned();
-            $table->integer('qty');
+            $table->string('invoice_id');
+            $table->integer('quantiy');
             $table->text('description');
             $table->double('unit_price');
-            $table->double('total');
+            $table->bigInteger('total');
             $table->timestamps();
         });
     }

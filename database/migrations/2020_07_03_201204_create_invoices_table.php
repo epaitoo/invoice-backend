@@ -23,11 +23,12 @@ class CreateInvoicesTable extends Migration
             $table->text('customer_address');
             $table->date('date');
             $table->date('due_date')->nullable();
+            $table->longText('invoice_items');
             $table->string('reference')->nullable();
             $table->text('terms_and_conditions')->nullable();
             $table->double('sub_total');
             $table->double('discount')->default(0);
-            $table->double('grand_total');
+            $table->bigInteger('grand_total');
             $table->timestamps();
         });
     }

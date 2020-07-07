@@ -15,28 +15,19 @@ class Invoice extends Model
         'customer_address',
         'date',
         'due_date',
+        'invoice_items',
         'reference',
         'terms_and_conditions',
         'discount',
+        'sub_total',
+        'grand_total'
     ];
 
-    protected $guarded = [
-        'sub_total', 'grand_total'
+    protected $casts = [
+        'invoice_items' => 'array'
     ];
 
-    public function items()
-    {
-        return $this->hasMany(InvoiceItem::class);
-    }
-
-    // public function setSubTotalAttribute($value)
-    // {
-    //     $this->attributes['sub_total'] = $value;
-    //     $discount = $this->attributes['discount'];
-    //     $this->attributes['grand_total'] = $value - $discount;
-    // }
-
-
+   
     // Getters mutator for human readable time
     public function getCreatedAtAttribute($value) {
         return \Carbon\Carbon::parse($value)->diffForHumans();
