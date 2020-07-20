@@ -15,7 +15,7 @@ class CreateInvoicesTable extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('userId');
+            $table->string('user_id');
             $table->string('invoice_number');
             $table->string('customer_id');
             $table->string('customer_name');
@@ -26,8 +26,6 @@ class CreateInvoicesTable extends Migration
             $table->longText('invoice_items');
             $table->string('reference')->nullable();
             $table->text('terms_and_conditions')->nullable();
-            $table->double('sub_total');
-            $table->double('discount')->default(0);
             $table->bigInteger('grand_total');
             $table->timestamps();
         });

@@ -41,33 +41,8 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        $invoice = Invoice::create($request->all());
-
-        // Getting all the invoice items from the system
-        $items = $request->input('invoice_items');
-
-        // create invoice items 
-        foreach ($items as $item)
-        {
-            InvoiceItem::create([
-                'invoice_id' => $item['id'],
-                'quantity' => $item['quantity'],
-                'description' => $item['description'],
-                'unit_price' => $item['unit_price'],
-                'total' => $item['total'],
-            ]);
-        }
-
-        if($items->isEmpty()) 
-        {
-            return response()
-            ->json([
-                'items_empty' => 'One or more Product item is required.'
-            ], 422);
-        }
-
-        $message = "Invoice successfully created";
-
+        Invoice::create($request->all());
+        $message = 'Invoice created successfully';
         return response(compact('message'), 200);
     }
 
@@ -103,53 +78,10 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $this->validate($request, [
-        //     'invoice_number' => 'required',
-        //     'customer_name' => 'required|max:255',
-        //     'customer_phone_number' => 'required|max:255',
-        //     'customer_address' => 'required',
-        //     'date' => 'required',
-        //     'discount' => 'required|numeric|min:0',
-        //     'items' => 'required|array|min:1',
-        //     'items.*.description' => 'required',
-        //     'items.*.qty' => 'required|integer|min:1',
-        //     'items.*.total' => 'required',
-        // ]);
-
-        // $invoice = Invoice::findOrFail($id);
-
-        //  // create a new invoice item
-        //  $items = collect($request->items)->transform(function($item){
-        //     $item['total'] = $item['qty'] * $item['unit_price'];
-        //     return new InvoiceItem($item);
-        // });
-
-        // if($items->isEmpty()) {
-        //     return response()
-        //     ->json([
-        //         'items_empty' => ['One or more Product item is required.']
-        //     ], 422);
-        // }
-
-        // // Get all the input value except the items array
-        // $data = $request->except('items');
-        // // Subtotal of the invoice is the sum of the total items (invoice items array)
-        // $data['sub_total'] = $items->sum('total');
-        // // Get the grand total of the invoice by deducting the subtotal from the discount
-        // $data['grand_total'] = $data['sub_total'] - $data['discount'];
-
-        // $invoice = Invoice::update($data);
-
-
-        // $invoice->items()->saveMany($products);
-
-        // return response()
-        //     ->json([
-        //         'updated' => true,
-        //         'id' => $invoice->id,
-        //         'message' => 'Invoice updated successfully'
-        //     ], 200);
-
+        
+        Invoice::updateOrCreate(['id' => $id], $request->all());
+        $message = "Invoice updated successfully";
+        return response(compact('message'), 200);
 
     }
 
@@ -162,12 +94,7 @@ class InvoiceController extends Controller
      */
     public function destroy($id)
     {
-        $invoice = Invoice::findOrFail($id);
-
-        // InvoiceItem::where('invoice_id', $invoice->id)->delete();
-
-        $invoice->delete();
-
+        Invoice::destroy($id);
         $message = 'Invoice deleted Successfully';
         return response(compact('message'), 200);
     }
@@ -175,7 +102,7 @@ class InvoiceController extends Controller
     // number generator
     protected function generateNumericKey()
     {
-        return Keygen::numeric(4)->prefix('INV-')->generate();
+        return Keygen::numeric(4)->generate();
     }
 
     // Auto generate Invoice number
