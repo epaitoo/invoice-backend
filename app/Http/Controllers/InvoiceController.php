@@ -22,7 +22,6 @@ class InvoiceController extends Controller
     }
 
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -52,21 +51,10 @@ class InvoiceController extends Controller
      * @param  \App\Customer  
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Invoice $invoice)
     {
-        $invoice = Invoice::findOrFail($id);
-        return response(compact('invoice'), 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Customer  $Customer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Customer $Customer)
-    {
-        //
+        return $invoice->load('customer');
+        
     }
 
     /**

@@ -10,9 +10,6 @@ class Invoice extends Model
         'user_id',
         'invoice_number',
         'customer_id',
-        'customer_name',
-        'customer_phone_number',
-        'customer_address',
         'date',
         'due_date',
         'invoice_items',
@@ -25,14 +22,20 @@ class Invoice extends Model
         'invoice_items' => 'array'
     ];
 
+    // Defining Relationship between Customer Table
+    public function customer()
+    {
+    return $this->belongsTo(\App\Customer::class);
+    }
+
    
     // Getters mutator for human readable time
     public function getCreatedAtAttribute($value) {
-        return \Carbon\Carbon::parse($value)->diffForHumans();
+        return date('d-m-Y H:i:s', strtotime($value));
     }
 
     public function getUpdatedAtAttribute($value) {
-        return \Carbon\Carbon::parse($value)->diffForHumans();
+        return date('d-m-Y H:i:s', strtotime($value));
     }
 
 }

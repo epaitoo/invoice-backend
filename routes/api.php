@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::post('login', 'UserController@login')->middleware('verify.user');
+Route::post('login', 'UserController@login');
 Route::post('register', 'UserController@store');
 Route::post('access_level', 'UserController@accessLevel');
 
@@ -35,7 +35,6 @@ Route::get('email/resend', 'Api\VerificationApiController@resend')->name('verifi
 
 Route::group(['middleware' => 'check.token', 'auth:api'], function () {
     Route::resource('users', 'UserController');
-    Route::resource('company', 'CompanyController');
     Route::resource('customers', 'CustomerController');  
     Route::resource('invoices', 'InvoiceController');  
 

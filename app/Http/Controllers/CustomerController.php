@@ -18,16 +18,6 @@ class CustomerController extends Controller
         return response(compact('data'), 200);
     }
 
-     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
 
     /**
      * Store a newly created resource in storage.
@@ -54,17 +44,7 @@ class CustomerController extends Controller
         return response(compact('data'), 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Customer  $Customer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Customer $Customer)
-    {
-        //
-    }
-
+ 
     /**
      * Update the specified resource in storage.
      *
@@ -91,5 +71,63 @@ class CustomerController extends Controller
         $message = 'Customer deleted Successfully';
         return response(compact('message'), 200);
     }
+
+    /**
+     * SoftDelete the specified resource from storage.
+     *
+     * @param  \App\Customer  $CustomerID
+     * @return \Illuminate\Http\Response
+     */
+    public function softDelete($id)
+    {
+        Customer::destroy($id);
+        $message = 'Customer deleted Temporarily';
+        return response(compact('message'), 200);
+    }
+
+    /**
+     * Display a listing of the SoftDeleted resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function SoftDeletedCustomers()
+    {
+        $data = Customer::onlyTrashed()->get();
+        return response(compact('data'), 200);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Customer  
+     * @return \Illuminate\Http\Response
+     */
+    public function viewSoftDeletedCustomer($id)
+    {
+        $data = Customer::onlyTrashed()->find($id);
+        return response(compact('data'), 200);
+    }
+
+    /**
+     * Permanently Remove the softdeleted resource from storage.
+     *
+     * @param  \App\Customer  $Customer
+     * @return \Illuminate\Http\Response
+     */
+    public function permanentlyDeleteSoftDelete($id)
+    {
+        $data = Customer::onlyTrashed()->find($id);
+
+        if (!is_null($data)){
+            $data->forceDelete();
+            $message = 'Customer deleted permanently';
+            return response(compact('message'), 200);
+        } else {
+            return response('Customer not deleted', 400);
+        }
+
+        return response('Customer not found', 404);
+    }
+
 
 }

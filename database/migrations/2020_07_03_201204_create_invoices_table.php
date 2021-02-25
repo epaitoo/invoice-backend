@@ -17,17 +17,15 @@ class CreateInvoicesTable extends Migration
             $table->id();
             $table->string('user_id');
             $table->string('invoice_number');
-            $table->string('customer_id');
-            $table->string('customer_name');
-            $table->string('customer_phone_number');
-            $table->text('customer_address');
+            $table->unsignedInteger('customer_id');
             $table->date('date');
             $table->date('due_date')->nullable();
             $table->longText('invoice_items');
             $table->string('reference')->nullable();
-            $table->text('terms_and_conditions')->nullable();
+            $table->boolean('terms_and_conditions')->default(1);
             $table->bigInteger('grand_total');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
