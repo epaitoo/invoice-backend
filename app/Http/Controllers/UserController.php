@@ -54,7 +54,7 @@ class UserController extends Controller
         ]);
         
         // Send Email Verification email
-        $user->sendApiEmailVerificationNotification();
+        // $user->sendApiEmailVerificationNotification();
 
         $message = 'Registration successful. Please verify account through the sent email.';
         return  response(compact('message', 'user'), 201);
@@ -85,7 +85,7 @@ class UserController extends Controller
             $token = $response->getBody();
 
             // Getting user
-            $user = User::where('email', $request->username)->get();
+            $user = User::where('email', $request->username)->first();
 
             //decode the token
             $data = json_decode($token, true);
@@ -144,12 +144,20 @@ class UserController extends Controller
     }
 
 
-    // Function for determining user access level
-    public function accessLevel(Request $request)
+    public function logout()
     {
-        $user = User::where('email', $request->username)->first();
-        return response(compact('user'), 200);
+        // Get the current Auth User
+        $tokenRepository = app('Laravel\Passport\TokenRepository');
+        $user = auth('api')->user();
+
+        if ($user){
+            // Revoke Access Token of the User
+            $tokenRepository->revokeAccessToken($user->token()->id);
+            $user->token()->delete();
+
+            return response()->json(['message' => 'Logged Out Successful'], 200);
+        } else {
+            return response()->json(['status', 'Already Logged Out']);
+        }
     }
-
-
 }

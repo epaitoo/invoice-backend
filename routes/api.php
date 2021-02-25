@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::post('login', 'UserController@login');
+Route::post('login', 'UserController@login')->middleware('verify.user');
+Route::post('register', 'UserController@store');
 Route::post('access_level', 'UserController@accessLevel');
 
 // Password reset
@@ -32,15 +33,17 @@ Route::get('email/resend', 'Api\VerificationApiController@resend')->name('verifi
 
 
 
-// Route::group(['middleware' => 'auth:api'], function () {
+Route::group(['middleware' => 'check.token', 'auth:api'], function () {
     Route::resource('users', 'UserController');
     Route::resource('company', 'CompanyController');
     Route::resource('customers', 'CustomerController');  
     Route::resource('invoices', 'InvoiceController');  
 
+    Route::post('logout', 'UserController@logout');
+
     Route::get('generate_invoice_num', 'InvoiceController@generateInvoiceNumber');
 
-// });
+});
 
 
 
